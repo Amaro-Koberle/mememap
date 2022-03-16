@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Node {
+  id        String      @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name     String
+  content   String
+  inLinks   Link[]   @relation("inLinks")
+  outLinks  Link[]   @relation("outLinks")
+  deleted DateTime?
+}
+
+model Link {
+  id        String      @id @default(uuid())
+  createdAt DateTime @default(now())
+  sourceNode   Node     @relation("outLinks", fields: [sourceNodeId], references: [id])
+  sourceNodeId String
+  targetNode   Node     @relation("inLinks", fields: [targetNodeId], references: [id])
+  targetNodeId String
+}
