@@ -1,5 +1,5 @@
 import type { LoaderFunction } from 'remix';
-import { json, useLoaderData } from 'remix';
+import { json, Link, useLoaderData } from 'remix';
 import type { Node } from '@prisma/client';
 
 import { db } from '~/utils/db.server';
@@ -21,6 +21,7 @@ export default function NodeRoute() {
 		<div>
 			<p>{data.node.name}</p>
 			<p>{data.node.content}</p>
+			<Link to='/links/new'>Link</Link>
 		</div>
 	);
 }
