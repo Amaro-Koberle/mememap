@@ -24,6 +24,7 @@ model Node {
 model Link {
   id        String      @id @default(uuid())
   createdAt DateTime @default(now())
+  name     String
   sourceNode   Node     @relation("outLinks", fields: [sourceNodeId], references: [id])
   sourceNodeId String
   targetNode   Node     @relation("inLinks", fields: [targetNodeId], references: [id])

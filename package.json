@@ -5,7 +5,7 @@
 	"license": "",
 	"sideEffects": false,
 	"prisma": {
-		"seed": "node --require esbuild-register prisma/seed.ts"
+		"seed": "node --require esbuild-register prisma/seed/index.ts"
 	},
 	"scripts": {
 		"build": "run-p build:*",
