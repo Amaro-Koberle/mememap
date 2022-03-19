@@ -21,8 +21,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function NodeRoute() {
 	const data = useLoaderData<LoaderData>();
-	console.log(data.node);
-	console.log(data);
 	return (
 		<div>
 			<p>{data.node.name}</p>
