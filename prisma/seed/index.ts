@@ -1,41 +1,21 @@
 import { PrismaClient } from '@prisma/client';
-import { Nodes } from './data/nodes';
-import { Links } from './data/links';
+import { getNodes } from './data/nodes';
+import { getLinks } from './data/links';
 
 const db = new PrismaClient();
 
-interface Node {
-	id: string;
-	name: string;
-	content: string;
-}
-interface Link {
-	id: string;
-	name: string;
-	sourceNodeId: string;
-	targetNodeId: string;
-}
-
 async function seed() {
-	// Nodes
+	// create nodes
 	await Promise.all(
-		Nodes.map(async (node: Node) =>
-			db.node.upsert({
-				where: { id: node.id },
-				update: {},
-				create: node,
-			})
-		)
+		getNodes().map((node) => {
+			return db.node.create({ data: node });
+		})
 	);
-	// Links
+	// create links
 	await Promise.all(
-		Links.map(async (link: Link) =>
-			db.link.upsert({
-				where: { id: link.id },
-				update: {},
-				create: link,
-			})
-		)
+		getLinks().map((link) => {
+			return db.link.create({ data: link });
+		})
 	);
 }
 
