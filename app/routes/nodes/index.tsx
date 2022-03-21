@@ -26,7 +26,10 @@ export default function NodesIndexRoute() {
 			<ul>
 				{data.nodeListItems.map((node) => (
 					<li key={node.id}>
-						<Link to={node.id}>{node.name}</Link>
+						<Link to={node.id}>
+							<p className='my-3'>{node.name}</p>
+							<hr className='border-b border-stone-300' />
+						</Link>
 					</li>
 				))}
 			</ul>
