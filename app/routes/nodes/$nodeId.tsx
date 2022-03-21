@@ -34,7 +34,7 @@ export default function NodeRoute() {
 				))}
 			</ul>
 			<p>---------</p>
-			<Link to='/links/new'>Link</Link>
+			<Link to={`/links/new/${data.node.id}/targetNodeId`}>Link</Link>
 		</div>
 	);
 }
