@@ -9,6 +9,7 @@ import {
 } from 'remix';
 import type { MetaFunction } from 'remix';
 import styles from './styles/tailwind.css';
+import MainNavigation from './components/mainNavigation';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 
@@ -31,6 +32,7 @@ export default function App() {
 				<ScrollRestoration />
 				<Scripts />
 				<LiveReload />
+				<MainNavigation />
 			</body>
 		</html>
 	);

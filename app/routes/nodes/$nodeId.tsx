@@ -57,7 +57,7 @@ export default function NodeRoute() {
 					</div>
 				</div>
 				<p className='mt-4 mx-2'>{data.node.content}</p>
-				<ul className='mt-4'>
+				<ul className='m-4 fixed bottom-10 left-0 right-0'>
 					{data.outLinks.map((link) => (
 						<li key={link.id}>
 							<Link to={`/nodes/${link.targetNodeId}`}>
