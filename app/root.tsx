@@ -9,7 +9,7 @@ import {
 } from 'remix';
 import type { MetaFunction } from 'remix';
 import styles from './styles/tailwind.css';
-import MainNavigation from './components/mainNavigation';
+import MainNavigation from './components/MainNavigation';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 

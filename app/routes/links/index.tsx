@@ -1,4 +1,4 @@
-import Search from '~/components/search';
+import Search from '~/components/Search';
 
 export default function LinksIndexRoute() {
 	return (

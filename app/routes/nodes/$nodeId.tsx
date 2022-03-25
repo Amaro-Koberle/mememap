@@ -1,13 +1,15 @@
+import { useState } from 'react';
 import type { LoaderFunction } from 'remix';
 import { json, Link, useLoaderData } from 'remix';
 import type { Node } from '@prisma/client';
 import type { Link as LinkPost } from '@prisma/client';
 
 import { MdArrowBackIos } from 'react-icons/md';
-import { MdOutlineArrowRightAlt } from 'react-icons/md';
+import { MdOutlineEast } from 'react-icons/md';
 import { MdMoreVert } from 'react-icons/md';
 
 import { db } from '~/utils/db.server';
+import { Modal } from '~/components/Modal';
 
 type LoaderData = { node: Node; outLinks: LinkPost[] };
 
@@ -24,9 +26,15 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export default function NodeRoute() {
+	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const data = useLoaderData<LoaderData>();
 	return (
 		<div className='mx-2'>
+			<Modal
+				isOpen={modalIsOpen}
+				setIsOpen={setModalIsOpen}
+				nodeId={data.node.id}
+			/>
 			<header className='flex items-center justify-between text-xl '>
 				<Link to='/nodes' className=''>
 					<MdArrowBackIos />
@@ -44,12 +52,14 @@ export default function NodeRoute() {
 						</div>
 					</div>
 					<div className='flex flex-nowrap gap-1'>
-						<Link to={`/links/new/${data.node.id}/targetNodeId`}>
-							<button className='rounded-xl bg-stone-300 py-2 px-4 flex flex-nowrap'>
-								<MdOutlineArrowRightAlt className='text-xl' />
-								<p>Link</p>
-							</button>
-						</Link>
+						<button
+							className='rounded-xl bg-stone-300 gap-1 py-2 px-4 flex flex-nowrap'
+							onClick={() => {
+								setModalIsOpen(true);
+							}}>
+							<MdOutlineEast className='text-xl' />
+							<p>Link</p>
+						</button>
 
 						<button className='rounded-xl bg-stone-300 p-2 text-xl'>
 							<MdMoreVert />
