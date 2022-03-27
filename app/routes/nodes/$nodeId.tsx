@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import type { LoaderFunction } from 'remix';
 import { json, Link, useLoaderData } from 'remix';
-import type { Node } from '@prisma/client';
-import type { Link as LinkPost } from '@prisma/client';
+import { Modal } from '~/components/Modal';
 
 import { MdArrowBackIos } from 'react-icons/md';
 import { MdOutlineEast } from 'react-icons/md';
-import { MdMoreVert } from 'react-icons/md';
+import { MdOutlineEdit } from 'react-icons/md';
+import { MdDeleteOutline } from 'react-icons/md';
 
 import { db } from '~/utils/db.server';
-import { Modal } from '~/components/Modal';
+import type { Node } from '@prisma/client';
+import type { Link as LinkPost } from '@prisma/client';
 
 type LoaderData = { node: Node; outLinks: LinkPost[] };
 
@@ -29,13 +30,13 @@ export default function NodeRoute() {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const data = useLoaderData<LoaderData>();
 	return (
-		<div className='mx-2'>
+		<div>
 			<Modal
 				isOpen={modalIsOpen}
 				setIsOpen={setModalIsOpen}
 				nodeId={data.node.id}
 			/>
-			<header className='flex items-center justify-between text-xl '>
+			<header className='flex items-center justify-between text-xl mx-2'>
 				<Link to='/nodes' className=''>
 					<MdArrowBackIos />
 				</Link>
@@ -60,10 +61,16 @@ export default function NodeRoute() {
 							<MdOutlineEast className='text-xl' />
 							<p>Link</p>
 						</button>
-
-						<button className='rounded-xl bg-stone-300 p-2 text-xl'>
-							<MdMoreVert />
-						</button>
+						<Link to={`/nodes/${data.node.id}/edit`}>
+							<button className='rounded-xl bg-stone-300 p-2 text-xl'>
+								<MdOutlineEdit />
+							</button>
+						</Link>
+						<Link to={`/nodes/${data.node.id}/edit`}>
+							<button className='rounded-xl bg-stone-300 p-2 text-xl'>
+								<MdDeleteOutline />
+							</button>
+						</Link>
 					</div>
 				</div>
 				<p className='mt-4 mx-2'>{data.node.content}</p>

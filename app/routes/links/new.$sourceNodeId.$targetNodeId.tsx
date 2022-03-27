@@ -34,19 +34,13 @@ const badRequest = (data: ActionData) => json(data, { status: 400 });
 export const action: ActionFunction = async ({ request }) => {
 	const form = await request.formData();
 	const name = form.get('name');
-	if (typeof name !== 'string') {
-		return badRequest({
-			formError: `Form not submitted correctly.`,
-		});
-	}
 	const sourceNodeId = form.get('sourceNodeId');
-	if (typeof sourceNodeId !== 'string') {
-		return badRequest({
-			formError: `Form not submitted correctly.`,
-		});
-	}
 	const targetNodeId = form.get('targetNodeId');
-	if (typeof targetNodeId !== 'string') {
+	if (
+		typeof name !== 'string' ||
+		typeof sourceNodeId !== 'string' ||
+		typeof targetNodeId !== 'string'
+	) {
 		return badRequest({
 			formError: `Form not submitted correctly.`,
 		});
