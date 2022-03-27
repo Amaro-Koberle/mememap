@@ -1,5 +1,7 @@
 import type { ActionFunction } from 'remix';
-import { useActionData, redirect, json } from 'remix';
+import { useActionData, Form, Link, redirect, json } from 'remix';
+
+import { MdArrowBackIos } from 'react-icons/md';
 
 import { db } from '~/utils/db.server';
 
@@ -57,11 +59,19 @@ export default function NewNodeRoute() {
 	const actionData = useActionData<ActionData>();
 	return (
 		<div>
-			<form method='post'>
+			<header className='flex items-center justify-between text-xl mx-2'>
+				<Link to='/nodes/' className=''>
+					<MdArrowBackIos />
+				</Link>
+				<h2>Edit node</h2>
+				<div className='w-4'></div>
+			</header>
+			<Form method='post' className='mt-4'>
 				<div>
-					<label>
-						Node name{' '}
+					<label className='rounded-t-xl border border-stone-900 flex flex-col p-2'>
+						<span className='text-sm text-stone-600'>Node name</span>
 						<input
+							className='bg-stone-200'
 							type='text'
 							name='name'
 							defaultValue={actionData?.fields?.name}
@@ -72,15 +82,16 @@ export default function NewNodeRoute() {
 						/>
 					</label>
 					{actionData?.fieldErrors?.name ? (
-						<p className='form-validation-error' role='alert' id='name-error'>
+						<p role='alert' id='name-error'>
 							{actionData.fieldErrors.name}
 						</p>
 					) : null}
 				</div>
 				<div>
-					<label>
-						Content{' '}
+					<label className='rounded-b-xl border-x border-b border-stone-900 flex flex-col p-2'>
+						<span className='text-sm text-stone-600'>Content</span>
 						<textarea
+							className='bg-stone-200 h-40'
 							name='content'
 							defaultValue={actionData?.fields?.content}
 							aria-invalid={
@@ -92,23 +103,22 @@ export default function NewNodeRoute() {
 						/>
 					</label>
 					{actionData?.fieldErrors?.content ? (
-						<p
-							className='form-validation-error'
-							role='alert'
-							id='content-error'>
+						<p role='alert' id='content-error'>
 							{actionData.fieldErrors.content}
 						</p>
 					) : null}
 				</div>
 				<div>
 					{actionData?.formError ? (
-						<p className='form-validation-error' role='alert'>
-							{actionData.formError}
-						</p>
+						<p role='alert'>{actionData.formError}</p>
 					) : null}
-					<button type='submit'>Add</button>
+					<button
+						className='uppercase font-bold text-lg absolute top-3 right-4'
+						type='submit'>
+						Post
+					</button>
 				</div>
-			</form>
+			</Form>
 		</div>
 	);
 }
