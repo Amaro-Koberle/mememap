@@ -1,5 +1,12 @@
 import { ActionFunction, LoaderFunction } from 'remix';
-import { useActionData, useLoaderData, Link, redirect, json } from 'remix';
+import {
+	useActionData,
+	useLoaderData,
+	Link,
+	Form,
+	redirect,
+	json,
+} from 'remix';
 
 import { MdArrowBackIos } from 'react-icons/md';
 
@@ -85,7 +92,7 @@ export default function NewNodeRoute() {
 				<h2>Edit node</h2>
 				<div className='w-4'></div>
 			</header>
-			<form method='post' className='mt-4'>
+			<Form method='post' className='mt-4'>
 				<div>
 					<label className='rounded-t-xl border border-stone-900 flex flex-col p-2'>
 						<span className='text-sm text-stone-600'>Node name</span>
@@ -105,7 +112,7 @@ export default function NewNodeRoute() {
 						/>
 					</label>
 					{actionData?.fieldErrors?.name ? (
-						<p className='form-validation-error' role='alert' id='name-error'>
+						<p role='alert' id='name-error'>
 							{actionData.fieldErrors.name}
 						</p>
 					) : null}
@@ -130,10 +137,7 @@ export default function NewNodeRoute() {
 						/>
 					</label>
 					{actionData?.fieldErrors?.content ? (
-						<p
-							className='form-validation-error'
-							role='alert'
-							id='content-error'>
+						<p role='alert' id='content-error'>
 							{actionData.fieldErrors.content}
 						</p>
 					) : null}
@@ -153,7 +157,7 @@ export default function NewNodeRoute() {
 						Save
 					</button>
 				</div>
-			</form>
+			</Form>
 		</div>
 	);
 }

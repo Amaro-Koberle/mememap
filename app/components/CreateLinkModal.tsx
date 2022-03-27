@@ -10,7 +10,7 @@ type ModalProps = {
 	nodeId: string;
 };
 
-export const Modal = ({ isOpen, setIsOpen, nodeId }: ModalProps) => {
+export const CreateLinkModal = ({ isOpen, setIsOpen, nodeId }: ModalProps) => {
 	return (
 		<Dialog
 			open={isOpen}
