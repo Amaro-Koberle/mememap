@@ -20,7 +20,7 @@ export const CreateLinkModal = ({ isOpen, setIsOpen, nodeId }: ModalProps) => {
 			<Dialog.Overlay className='fixed inset-0 bg-stone-900 opacity-30 -z-10' />
 			<div className='z-10 bg-stone-200 rounded-t-2xl p-4'>
 				<Dialog.Title>Create link?</Dialog.Title>
-				<Link to={`/links/new/${nodeId}/targetNodeId`}>
+				<Link to={`/links/new/incoming/${nodeId}/targetNodeId`}>
 					<button
 						className='rounded-xl bg-stone-300 py-2 px-4 gap-4 items-center flex flex-nowrap w-full my-2'
 						onClick={() => setIsOpen(false)}>
@@ -33,7 +33,7 @@ export const CreateLinkModal = ({ isOpen, setIsOpen, nodeId }: ModalProps) => {
 						</div>
 					</button>
 				</Link>
-				<Link to={`/links/new/${nodeId}/targetNodeId`}>
+				<Link to={`/links/new/outgoing/sourceNodeId/${nodeId}`}>
 					<button
 						className='rounded-xl bg-stone-300 py-2 px-4 gap-4 items-center flex flex-nowrap w-full my-2'
 						onClick={() => setIsOpen(false)}>

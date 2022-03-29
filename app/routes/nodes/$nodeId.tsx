@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import type { LoaderFunction } from 'remix';
-import { json, Link, useLoaderData } from 'remix';
-import { Modal } from '~/components/Modal';
+import { Link, useLoaderData, ActionFunction, json, redirect } from 'remix';
+import { CreateLinkModal } from '~/components/CreateLinkModal';
+import { DeleteNodeModal } from '~/components/DeleteNodeModal';
 
 import { MdArrowBackIos } from 'react-icons/md';
 import { MdOutlineEast } from 'react-icons/md';
@@ -26,18 +27,44 @@ export const loader: LoaderFunction = async ({ params }) => {
 	return json(data);
 };
 
+type ActionData = {
+	formError?: string;
+};
+
+const badRequest = (data: ActionData) => json(data, { status: 400 });
+
+export const action: ActionFunction = async ({ request }) => {
+	const form = await request.formData();
+	const nodeId = form.get('nodeId');
+	console.log(nodeId);
+	if (typeof nodeId !== 'string') {
+		return badRequest({
+			formError: `Node deletion failed.`,
+		});
+	}
+
+	await db.node.delete({ where: { id: nodeId } });
+	return redirect(`/nodes/`);
+};
+
 export default function NodeRoute() {
-	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [createLinkModalIsOpen, setCreateLinkModalIsOpen] = useState(false);
+	const [deleteNodeModalIsOpen, setDeleteNodeModalIsOpen] = useState(false);
 	const data = useLoaderData<LoaderData>();
 	return (
 		<div>
-			<Modal
-				isOpen={modalIsOpen}
-				setIsOpen={setModalIsOpen}
+			<CreateLinkModal
+				isOpen={createLinkModalIsOpen}
+				setIsOpen={setCreateLinkModalIsOpen}
+				nodeId={data.node.id}
+			/>
+			<DeleteNodeModal
+				isOpen={deleteNodeModalIsOpen}
+				setIsOpen={setDeleteNodeModalIsOpen}
 				nodeId={data.node.id}
 			/>
 			<header className='flex items-center justify-between text-xl mx-2'>
-				<Link to='/nodes' className=''>
+				<Link to='/nodes'>
 					<MdArrowBackIos />
 				</Link>
 				<h2>{data.node.name}</h2>
@@ -56,7 +83,7 @@ export default function NodeRoute() {
 						<button
 							className='rounded-xl bg-stone-300 gap-1 py-2 px-4 flex flex-nowrap'
 							onClick={() => {
-								setModalIsOpen(true);
+								setCreateLinkModalIsOpen(true);
 							}}>
 							<MdOutlineEast className='text-xl' />
 							<p>Link</p>
@@ -66,11 +93,13 @@ export default function NodeRoute() {
 								<MdOutlineEdit />
 							</button>
 						</Link>
-						<Link to={`/nodes/${data.node.id}/edit`}>
-							<button className='rounded-xl bg-stone-300 p-2 text-xl'>
-								<MdDeleteOutline />
-							</button>
-						</Link>
+						<button
+							className='rounded-xl bg-stone-300 p-2 text-xl'
+							onClick={() => {
+								setDeleteNodeModalIsOpen(true);
+							}}>
+							<MdDeleteOutline />
+						</button>
 					</div>
 				</div>
 				<p className='mt-4 mx-2'>{data.node.content}</p>
