@@ -11,27 +11,21 @@ import {
 import { MdArrowBackIos } from 'react-icons/md';
 
 import { db } from '~/utils/db.server';
-import type { Node } from '@prisma/client';
+import type { Link as LinkPost } from '@prisma/client';
 
-type LoaderData = { node: Node };
+type LoaderData = { link: LinkPost };
 
 export const loader: LoaderFunction = async ({ params }) => {
-	const node = await db.node.findUnique({
-		where: { id: params.nodeId },
+	const link = await db.link.findUnique({
+		where: { id: params.linkId },
 	});
-	if (!node) throw new Error('Node not found');
+	if (!link) throw new Error('Link not found');
 
-	const data: LoaderData = { node };
+	const data: LoaderData = { link };
 	return json(data);
 };
 
-function validateNodeContent(content: string) {
-	if (content.length < 10) {
-		return `That content is too short`;
-	}
-}
-
-function validateNodeName(name: string) {
+function validateLinkName(name: string) {
 	if (name.length < 3) {
 		return `That name is too short`;
 	}
@@ -41,11 +35,9 @@ type ActionData = {
 	formError?: string;
 	fieldErrors?: {
 		name: string | undefined;
-		content: string | undefined;
 	};
 	fields?: {
 		name: string;
-		content: string;
 	};
 };
 
@@ -53,31 +45,25 @@ const badRequest = (data: ActionData) => json(data, { status: 400 });
 
 export const action: ActionFunction = async ({ request }) => {
 	const form = await request.formData();
-	const nodeId = form.get('nodeId');
+	const linkId = form.get('linkId');
 	const name = form.get('name');
-	const content = form.get('content');
-	if (
-		typeof nodeId !== 'string' ||
-		typeof name !== 'string' ||
-		typeof content !== 'string'
-	) {
+	if (typeof linkId !== 'string' || typeof name !== 'string') {
 		return badRequest({
 			formError: `Form not submitted correctly.`,
 		});
 	}
 
 	const fieldErrors = {
-		name: validateNodeName(name),
-		content: validateNodeContent(content),
+		name: validateLinkName(name),
 	};
 
-	const fields = { name, content };
+	const fields = { name };
 	if (Object.values(fieldErrors).some(Boolean)) {
 		return badRequest({ fieldErrors, fields });
 	}
 
-	const node = await db.node.update({ where: { id: nodeId }, data: fields });
-	return redirect(`/nodes/${node.id}`);
+	const link = await db.link.update({ where: { id: linkId }, data: fields });
+	return redirect(`nodes/${link.sourceNodeId}`);
 };
 
 export default function NewNodeRoute() {
@@ -86,16 +72,16 @@ export default function NewNodeRoute() {
 	return (
 		<div>
 			<header className='flex items-center justify-between text-xl mx-2'>
-				<Link to={`/nodes/${data.node.id}`} className=''>
+				<Link to={`/nodes/${data.link.id}`} className=''>
 					<MdArrowBackIos />
 				</Link>
-				<h2>Edit node</h2>
+				<h2>Edit link</h2>
 				<div className='w-4'></div>
 			</header>
 			<Form method='post' className='mt-4'>
 				<div>
-					<label className='rounded-t-xl border border-stone-600 flex flex-col p-2'>
-						<span className='text-sm text-stone-600'>Node name</span>
+					<label className='rounded-xl border border-stone-600 flex flex-col p-2'>
+						<span className='text-sm text-stone-600'>Link name</span>
 						<input
 							className='bg-stone-200'
 							type='text'
@@ -103,7 +89,7 @@ export default function NewNodeRoute() {
 							defaultValue={
 								actionData?.fields?.name
 									? actionData?.fields?.name
-									: data.node.name
+									: data.link.name
 							}
 							aria-invalid={Boolean(actionData?.fieldErrors?.name) || undefined}
 							aria-errormessage={
@@ -118,32 +104,7 @@ export default function NewNodeRoute() {
 					) : null}
 				</div>
 				<div>
-					<label className='rounded-b-xl border-x border-b border-stone-600 flex flex-col p-2'>
-						<span className='text-sm text-stone-600'>Content</span>
-						<textarea
-							className='bg-stone-200 h-40'
-							name='content'
-							defaultValue={
-								actionData?.fields?.content
-									? actionData?.fields?.content
-									: data.node.content
-							}
-							aria-invalid={
-								Boolean(actionData?.fieldErrors?.content) || undefined
-							}
-							aria-errormessage={
-								actionData?.fieldErrors?.content ? 'content-error' : undefined
-							}
-						/>
-					</label>
-					{actionData?.fieldErrors?.content ? (
-						<p role='alert' id='content-error'>
-							{actionData.fieldErrors.content}
-						</p>
-					) : null}
-				</div>
-				<div>
-					<input name='nodeId' value={data.node.id} type='hidden' />
+					<input name='linkId' value={data.link.id} type='hidden' />
 				</div>
 				<div>
 					{actionData?.formError ? (

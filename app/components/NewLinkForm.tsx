@@ -34,7 +34,7 @@ export default function NewLinkForm({
 					<MdArrowBackIos />
 				</Link>
 				<h2>
-					{params.linkDirection == 'outgoing'
+					{params.linkDirection === 'outgoing'
 						? targetNode?.name
 						: sourceNode?.name}
 				</h2>
@@ -42,14 +42,14 @@ export default function NewLinkForm({
 			</header>
 			<div>
 				<p className='mt-4 mx-2'>
-					{params.linkDirection == 'outgoing'
+					{params.linkDirection === 'outgoing'
 						? targetNode?.content
 						: sourceNode?.content}
 				</p>
 			</div>
 			<Form className='mt-4' method='post'>
 				<div>
-					<label className='rounded-xl border border-stone-900 flex flex-col p-2'>
+					<label className='rounded-xl border border-stone-600 flex flex-col p-2'>
 						<span className='text-sm text-stone-600'>Link name</span>
 						<input
 							type='text'
@@ -83,7 +83,7 @@ export default function NewLinkForm({
 						<div className='flex flex-col text-left'>
 							<p>Create link</p>
 							<p className='text-sm text-stone-400'>
-								{params.linkDirection == 'outgoing'
+								{params.linkDirection === 'outgoing'
 									? `Link '${sourceNode?.name}' to this node`
 									: `Link this node to '${targetNode?.name}'`}
 							</p>
