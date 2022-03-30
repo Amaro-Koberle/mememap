@@ -6,6 +6,8 @@ import { MdOutlineSettings } from 'react-icons/md';
 import { MdSettings } from 'react-icons/md';
 import { MdOutlineExplore } from 'react-icons/md';
 import { MdExplore } from 'react-icons/md';
+import { MdOutlineAccountCircle } from 'react-icons/md';
+import { MdAccountCircle } from 'react-icons/md';
 
 export default function MainNavigation() {
 	return (
@@ -25,7 +27,7 @@ export default function MainNavigation() {
 				</li>
 				<li key='profile'>
 					<NavLink to='/nodes/new' className='flex flex-col items-center'>
-						<div className='w-6 h-6 rounded-full bg-stone-300'></div>
+						<MdOutlineAccountCircle className='text-2xl' />
 						{/* <span className='text-sm'>Profile</span> */}
 					</NavLink>
 				</li>

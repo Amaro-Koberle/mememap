@@ -10,6 +10,7 @@ import { MdArrowBackIos } from 'react-icons/md';
 import { MdOutlineEast } from 'react-icons/md';
 import { MdOutlineEdit } from 'react-icons/md';
 import { MdDeleteOutline } from 'react-icons/md';
+import { MdOutlineAccountCircle } from 'react-icons/md';
 
 import { db } from '~/utils/db.server';
 import type { Node } from '@prisma/client';
@@ -90,7 +91,9 @@ export default function NodeRoute() {
 			<main className='mt-4'>
 				<div className='flex justify-between items-center'>
 					<div className='flex items-center gap-2'>
-						<div className='w-10 h-10 rounded-full bg-stone-300'></div>
+						<div className='w-10 h-10 rounded-full border border-stone-900 bg-stone-300 flex justify-center items-center text-5xl'>
+							<MdOutlineAccountCircle className='text-stone-400' />
+						</div>
 						<div className='flex flex-col'>
 							<span>User Name</span>
 							<span className='text-sm text-stone-500'>@username</span>
@@ -120,10 +123,16 @@ export default function NodeRoute() {
 					</div>
 				</div>
 				<p className='mt-4 mx-2'>{data.node.content}</p>
-				<OutLinkList
-					summonLinkDetailsModal={summonLinkDetailsModal}
-					outLinks={data.outLinks}
-				/>
+				<div className='m-4 fixed bottom-10 left-0 right-0'>
+					<OutLinkList
+						summonLinkDetailsModal={summonLinkDetailsModal}
+						outLinks={data.outLinks}
+					/>
+					<div className='text-stone-500 text-sm flex justify-between mt-2'>
+						<span>{data.node.createdAt}</span>
+						<span>{`In 12 • Out ${data.outLinks.length}`}</span>
+					</div>
+				</div>
 			</main>
 		</div>
 	);

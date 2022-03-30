@@ -28,15 +28,13 @@ export default function DeleteNodeModal({
 						type='submit'
 						name='nodeId'
 						value={nodeId}
-						className='rounded-xl text-red-900 bg-red-300 py-2 px-4 gap-4 items-center flex flex-nowrap w-full my-2'
+						className='rounded-xl text-red-700 bg-red-200 py-2 px-4 gap-4 items-center flex flex-nowrap w-full my-2'
 						// onClick={() => setIsOpen(false)}
 					>
 						<MdDeleteOutline className='text-2xl' />
 						<div className='flex flex-col text-left'>
 							<p>Delete node</p>
-							<p className='text-sm text-red-700'>
-								This action can't be undone
-							</p>
+							<p className='text-sm'>This action can't be undone</p>
 						</div>
 					</button>
 				</Form>
