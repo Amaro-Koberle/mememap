@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { LoaderFunction } from 'remix';
 import { Link, useLoaderData, ActionFunction, json, redirect } from 'remix';
+import dayjs from 'dayjs';
 import CreateLinkModal from '~/components/modals/CreateLinkModal';
 import DeleteNodeModal from '~/components/modals/DeleteNodeModal';
 import LinkDetailsModal from '~/components/modals/LinkDetailsModal';
@@ -56,6 +57,8 @@ export default function NodeRoute() {
 	const [linkDetailsModalIsOpen, setLinkDetailsModalIsOpen] = useState(false);
 	const [createLinkModalIsOpen, setCreateLinkModalIsOpen] = useState(false);
 	const [deleteNodeModalIsOpen, setDeleteNodeModalIsOpen] = useState(false);
+
+	const postDate = dayjs(data.node.createdAt).format('h:m A • MMM D, YYYY');
 
 	const summonLinkDetailsModal = (link: LinkPost): void => {
 		setLDisplayedLink(link);
@@ -129,7 +132,7 @@ export default function NodeRoute() {
 						outLinks={data.outLinks}
 					/>
 					<div className='text-stone-500 text-sm flex justify-between mt-2'>
-						<span>{data.node.createdAt}</span>
+						<span>{postDate}</span>
 						<span>{`In 12 • Out ${data.outLinks.length}`}</span>
 					</div>
 				</div>

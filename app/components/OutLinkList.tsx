@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'remix';
 
 import { MdOutlineMoreVert } from 'react-icons/md';
