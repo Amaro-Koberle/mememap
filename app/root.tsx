@@ -9,7 +9,6 @@ import {
 } from 'remix';
 import type { MetaFunction } from 'remix';
 import styles from './styles/tailwind.css';
-import MainNavigation from './components/MainNavigation';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 
@@ -19,7 +18,7 @@ export const meta: MetaFunction = () => {
 
 export default function App() {
 	return (
-		<html lang='en'>
+		<html lang='en' className='h-screen'>
 			<head>
 				<meta charSet='utf-8' />
 				<meta name='viewport' content='width=device-width,initial-scale=1' />
@@ -27,12 +26,11 @@ export default function App() {
 				<Meta />
 				<Links />
 			</head>
-			<body className='bg-stone-200 text-stone-900 m-3'>
+			<body className='bg-stone-200 text-stone-900 flex flex-col h-full p-2 overflow-clip'>
 				<Outlet />
 				<ScrollRestoration />
 				<Scripts />
 				<LiveReload />
-				<MainNavigation />
 			</body>
 		</html>
 	);

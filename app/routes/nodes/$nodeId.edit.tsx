@@ -7,6 +7,7 @@ import {
 	redirect,
 	json,
 } from 'remix';
+import Input from '~/components/Input';
 
 import { MdArrowBackIos } from 'react-icons/md';
 
@@ -93,55 +94,29 @@ export default function NewNodeRoute() {
 				<div className='w-4'></div>
 			</header>
 			<Form method='post' className='mt-4'>
-				<div>
-					<label className='rounded-t-xl border border-stone-600 flex flex-col p-2'>
-						<span className='text-sm text-stone-600'>Node name</span>
-						<input
-							className='bg-stone-200'
-							type='text'
-							name='name'
-							defaultValue={
-								actionData?.fields?.name
-									? actionData?.fields?.name
-									: data.node.name
-							}
-							aria-invalid={Boolean(actionData?.fieldErrors?.name) || undefined}
-							aria-errormessage={
-								actionData?.fieldErrors?.name ? 'name-error' : undefined
-							}
-						/>
-					</label>
-					{actionData?.fieldErrors?.name ? (
-						<p role='alert' id='name-error'>
-							{actionData.fieldErrors.name}
-						</p>
-					) : null}
-				</div>
-				<div>
-					<label className='rounded-b-xl border-x border-b border-stone-600 flex flex-col p-2'>
-						<span className='text-sm text-stone-600'>Content</span>
-						<textarea
-							className='bg-stone-200 h-40'
-							name='content'
-							defaultValue={
-								actionData?.fields?.content
-									? actionData?.fields?.content
-									: data.node.content
-							}
-							aria-invalid={
-								Boolean(actionData?.fieldErrors?.content) || undefined
-							}
-							aria-errormessage={
-								actionData?.fieldErrors?.content ? 'content-error' : undefined
-							}
-						/>
-					</label>
-					{actionData?.fieldErrors?.content ? (
-						<p role='alert' id='content-error'>
-							{actionData.fieldErrors.content}
-						</p>
-					) : null}
-				</div>
+				<Input
+					label='Node name'
+					name='name'
+					type='text'
+					position='top'
+					actionDataField={
+						actionData?.fields?.name ? actionData?.fields?.name : data.node.name
+					}
+					actionDataFieldError={actionData?.fieldErrors?.name}
+				/>
+				<Input
+					inputType='textarea'
+					label='Content'
+					name='content'
+					type='text'
+					position='bottom'
+					actionDataField={
+						actionData?.fields?.content
+							? actionData?.fields?.content
+							: data.node.content
+					}
+					actionDataFieldError={actionData?.fieldErrors?.content}
+				/>
 				<div>
 					<input name='nodeId' value={data.node.id} type='hidden' />
 				</div>

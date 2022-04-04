@@ -7,6 +7,7 @@ import {
 	redirect,
 	json,
 } from 'remix';
+import Input from '~/components/Input';
 
 import { MdArrowBackIos } from 'react-icons/md';
 
@@ -79,45 +80,26 @@ export default function NewNodeRoute() {
 				<div className='w-4'></div>
 			</header>
 			<Form method='post' className='mt-4'>
-				<div>
-					<label className='rounded-xl border border-stone-600 flex flex-col p-2'>
-						<span className='text-sm text-stone-600'>Link name</span>
-						<input
-							className='bg-stone-200'
-							type='text'
-							name='name'
-							defaultValue={
-								actionData?.fields?.name
-									? actionData?.fields?.name
-									: data.link.name
-							}
-							aria-invalid={Boolean(actionData?.fieldErrors?.name) || undefined}
-							aria-errormessage={
-								actionData?.fieldErrors?.name ? 'name-error' : undefined
-							}
-						/>
-					</label>
-					{actionData?.fieldErrors?.name ? (
-						<p role='alert' id='name-error'>
-							{actionData.fieldErrors.name}
-						</p>
-					) : null}
-				</div>
-				<div>
-					<input name='linkId' value={data.link.id} type='hidden' />
-				</div>
-				<div>
-					{actionData?.formError ? (
-						<p className='form-validation-error' role='alert'>
-							{actionData.formError}
-						</p>
-					) : null}
-					<button
-						className='uppercase font-bold text-lg absolute top-3 right-4'
-						type='submit'>
-						Save
-					</button>
-				</div>
+				<Input
+					label='Link name'
+					name='name'
+					type='text'
+					actionDataField={
+						actionData?.fields?.name ? actionData?.fields?.name : data.link.name
+					}
+					actionDataFieldError={actionData?.fieldErrors?.name}
+				/>
+				<input name='linkId' value={data.link.id} type='hidden' />
+				{actionData?.formError ? (
+					<p className='form-validation-error' role='alert'>
+						{actionData.formError}
+					</p>
+				) : null}
+				<button
+					className='uppercase font-bold text-lg absolute top-3 right-4'
+					type='submit'>
+					Save
+				</button>
 			</Form>
 		</div>
 	);

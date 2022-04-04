@@ -16,6 +16,7 @@ import { MdOutlineAccountCircle } from 'react-icons/md';
 import { db } from '~/utils/db.server';
 import type { Node } from '@prisma/client';
 import type { Link as LinkPost } from '@prisma/client';
+import Button from '~/components/Button';
 
 type LoaderData = { node: Node; outLinks: LinkPost[] };
 
@@ -66,7 +67,7 @@ export default function NodeRoute() {
 	};
 
 	return (
-		<div>
+		<div className='h-full relative'>
 			{displayedLink ? (
 				<LinkDetailsModal
 					link={displayedLink}
@@ -84,14 +85,14 @@ export default function NodeRoute() {
 				setIsOpen={setDeleteNodeModalIsOpen}
 				nodeId={data.node.id}
 			/>
-			<header className='flex items-center justify-between text-xl mx-2'>
+			<div className='flex items-center justify-between text-xl mx-2'>
 				<Link to='/nodes'>
 					<MdArrowBackIos />
 				</Link>
 				<h2>{data.node.name}</h2>
 				<div className='w-4'></div>
-			</header>
-			<main className='mt-4'>
+			</div>
+			<div className='h-full mt-2'>
 				<div className='flex justify-between items-center'>
 					<div className='flex items-center gap-2'>
 						<div className='w-10 h-10 rounded-full border border-stone-900 bg-stone-300 flex justify-center items-center text-5xl'>
@@ -103,30 +104,27 @@ export default function NodeRoute() {
 						</div>
 					</div>
 					<div className='flex flex-nowrap gap-1 h-10 items-center'>
-						<button
-							className='rounded-xl bg-stone-300 gap-1 h-full items-center px-4 flex flex-nowrap'
+						<Button
+							icon={<MdOutlineEast />}
+							thin={true}
+							buttonName='Link'
 							onClick={() => {
 								setCreateLinkModalIsOpen(true);
-							}}>
-							<MdOutlineEast className='text-xl' />
-							<p>Link</p>
-						</button>
-						<Link
-							to={`/nodes/${data.node.id}/edit`}
-							className='flex items-center justify-center rounded-xl bg-stone-300 w-10 h-full text-xl'>
-							<MdOutlineEdit />
+							}}
+						/>
+						<Link to={`/nodes/${data.node.id}/edit`}>
+							<Button icon={<MdOutlineEdit />} />
 						</Link>
-						<button
-							className='flex items-center justify-center rounded-xl bg-stone-300 w-10 h-full text-xl'
+						<Button
+							icon={<MdDeleteOutline />}
 							onClick={() => {
 								setDeleteNodeModalIsOpen(true);
-							}}>
-							<MdDeleteOutline />
-						</button>
+							}}
+						/>
 					</div>
 				</div>
-				<p className='mt-4 mx-2'>{data.node.content}</p>
-				<div className='m-4 fixed bottom-10 left-0 right-0'>
+				<p className='mt-4'>{data.node.content}</p>
+				<div className='absolute bottom-0 inset-x-0'>
 					<OutLinkList
 						summonLinkDetailsModal={summonLinkDetailsModal}
 						outLinks={data.outLinks}
@@ -136,7 +134,7 @@ export default function NodeRoute() {
 						<span>{`In 12 • Out ${data.outLinks.length}`}</span>
 					</div>
 				</div>
-			</main>
+			</div>
 		</div>
 	);
 }

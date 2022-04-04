@@ -1,4 +1,5 @@
-import { Dialog } from '@headlessui/react';
+import Modal from './Modal';
+import Button from '../Button';
 import { Form } from 'remix';
 
 import { MdDeleteOutline } from 'react-icons/md';
@@ -15,30 +16,23 @@ export default function DeleteNodeModal({
 	nodeId,
 }: ModalProps) {
 	return (
-		<Dialog
-			open={isOpen}
-			onClose={() => setIsOpen(false)}
-			as='div'
-			className='fixed z-10 overflow-y-auto bottom-0 left-0 w-screen'>
-			<Dialog.Overlay className='fixed inset-0 bg-stone-900 opacity-30 -z-10' />
-			<div className='z-10 bg-stone-200 rounded-t-2xl p-4'>
-				<Dialog.Title className='text-lg'>Are you sure?</Dialog.Title>
-				<Form method='post' className='mt-4'>
-					<button
-						type='submit'
-						name='nodeId'
-						value={nodeId}
-						className='rounded-xl text-red-700 bg-red-200 py-2 px-4 gap-4 items-center flex flex-nowrap w-full my-2'
-						// onClick={() => setIsOpen(false)}
-					>
-						<MdDeleteOutline className='text-2xl' />
-						<div className='flex flex-col text-left'>
-							<p>Delete node</p>
-							<p className='text-sm'>This action can't be undone</p>
-						</div>
-					</button>
-				</Form>
-			</div>
-		</Dialog>
+		<Modal
+			setIsOpen={(arg) => setIsOpen(arg)}
+			isOpen={isOpen}
+			title='Delete node'>
+			<Form method='post'>
+				<Button
+					buttonType='danger'
+					className='w-full'
+					type='submit'
+					name='nodeId'
+					value={nodeId}
+					buttonName='Delete node'
+					buttonDescription='This action can&#8217;t be undone'
+					icon={<MdDeleteOutline />}
+					onClick={() => setIsOpen(false)}
+				/>
+			</Form>
+		</Modal>
 	);
 }
