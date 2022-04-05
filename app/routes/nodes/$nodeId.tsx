@@ -6,13 +6,11 @@ import CreateLinkModal from '~/components/modals/CreateLinkModal';
 import DeleteNodeModal from '~/components/modals/DeleteNodeModal';
 import LinkDetailsModal from '~/components/modals/LinkDetailsModal';
 import OutLinkList from '~/components/OutLinkList';
-
 import { MdArrowBackIos } from 'react-icons/md';
 import { MdOutlineEast } from 'react-icons/md';
 import { MdOutlineEdit } from 'react-icons/md';
 import { MdDeleteOutline } from 'react-icons/md';
 import { MdOutlineAccountCircle } from 'react-icons/md';
-
 import { db } from '~/utils/db.server';
 import type { Node } from '@prisma/client';
 import type { Link as LinkPost } from '@prisma/client';

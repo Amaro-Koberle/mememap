@@ -6,14 +6,16 @@ import { MdDeleteOutline } from 'react-icons/md';
 
 type ModalProps = {
 	isOpen: boolean;
+	handleLinkDeletion: () => void;
 	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	nodeId: string;
+	linkId: string;
 };
 
-export default function DeleteNodeModal({
+export default function DeleteLinkModal({
 	isOpen,
+	handleLinkDeletion,
 	setIsOpen,
-	nodeId,
+	linkId,
 }: ModalProps) {
 	return (
 		<Modal
@@ -25,12 +27,12 @@ export default function DeleteNodeModal({
 					buttonType='danger'
 					className='w-full'
 					type='submit'
-					name='nodeId'
-					value={nodeId}
-					buttonName='Delete node'
+					name='linkId'
+					value={linkId}
+					buttonName='Delete link'
 					buttonDescription='This action can&#8217;t be undone'
 					icon={<MdDeleteOutline />}
-					onClick={() => setIsOpen(false)}
+					onClick={() => handleLinkDeletion()}
 				/>
 			</Form>
 		</Modal>
