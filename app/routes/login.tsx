@@ -1,9 +1,9 @@
 import { Form, Link, useActionData, json, redirect } from 'remix';
+import { sendEmail } from '~/utils/services/emailService.server';
 import type { ActionFunction } from 'remix';
 import { MdOutlineForwardToInbox } from 'react-icons/md';
 import { MdArrowBackIos } from 'react-icons/md';
 import Button from '~/components/Button';
-import postmark from 'postmark';
 import Input from '~/components/Input';
 
 function validateEmail(email: string) {
@@ -44,25 +44,15 @@ export const action: ActionFunction = async ({ request }) => {
 
 	const testEmailMessage = {
 		From: 'amaro@amarokoberle.com',
-		To: 'amaro@amarokoberle.com',
+		To: email,
 		Subject: 'Hello from Postmark',
 		HtmlBody: '<strong>Hello</strong> dear Postmark user.',
 		TextBody: 'Hello from Postmark!',
 		MessageStream: 'outbound',
 	};
 
-	if (process.env.POSTMARK_API_KEY) {
-		// TODO: Send email, this currently does not work
-		const emailClient = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
-		emailClient.sendEmail(testEmailMessage).then((response) => {
-			console.log(response.To);
-			console.log(response.SubmittedAt);
-			console.log(response.Message);
-			console.log(response.MessageID);
-			console.log(response.ErrorCode);
-		});
-		console.log('signup');
-	}
+	await sendEmail(testEmailMessage);
+	console.log('signup');
 
 	return redirect(`/`);
 };
