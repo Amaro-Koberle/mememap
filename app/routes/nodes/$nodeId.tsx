@@ -13,10 +13,10 @@ import { MdDeleteOutline } from 'react-icons/md';
 import { MdOutlineAccountCircle } from 'react-icons/md';
 import { db } from '~/utils/db.server';
 import type { Node } from '@prisma/client';
-import type { Link as LinkPost } from '@prisma/client';
+import type { Link as NodeLink } from '@prisma/client';
 import Button from '~/components/Button';
 
-type LoaderData = { node: Node; outLinks: LinkPost[] };
+type LoaderData = { node: Node; outLinks: NodeLink[] };
 
 export const loader: LoaderFunction = async ({ params }) => {
 	const node = await db.node.findUnique({
@@ -52,14 +52,14 @@ export const action: ActionFunction = async ({ request }) => {
 export default function NodeRoute() {
 	const data = useLoaderData<LoaderData>();
 
-	const [displayedLink, setLDisplayedLink] = useState<LinkPost | null>(null);
+	const [displayedLink, setLDisplayedLink] = useState<NodeLink | null>(null);
 	const [linkDetailsModalIsOpen, setLinkDetailsModalIsOpen] = useState(false);
 	const [createLinkModalIsOpen, setCreateLinkModalIsOpen] = useState(false);
 	const [deleteNodeModalIsOpen, setDeleteNodeModalIsOpen] = useState(false);
 
 	const postDate = dayjs(data.node.createdAt).format('h:m A • MMM D, YYYY');
 
-	const summonLinkDetailsModal = (link: LinkPost): void => {
+	const summonLinkDetailsModal = (link: NodeLink): void => {
 		setLDisplayedLink(link);
 		setLinkDetailsModalIsOpen(true);
 	};

@@ -18,14 +18,28 @@ model Node {
   content   String
   inLinks   Link[]   @relation("inLinks")
   outLinks  Link[]   @relation("outLinks")
+  author   User  @relation(fields: [authorId], references: [id])
+  authorId String
 }
 
 model Link {
   id        String      @id @default(uuid())
   createdAt DateTime @default(now())
   name     String
+  author   User  @relation(fields: [authorId], references: [id])
+  authorId String
   sourceNode   Node     @relation("outLinks", fields: [sourceNodeId], references: [id], onDelete: Cascade)
   sourceNodeId String
   targetNode   Node     @relation("inLinks", fields: [targetNodeId], references: [id], onDelete: Cascade)
   targetNodeId String
+}
+
+model User {
+  id        String      @id @default(uuid())
+  createdAt DateTime @default(now())
+  name     String
+  handle   String @unique
+  email   String  @unique
+  nodes   Node[]
+  links   Link[]
 }
