@@ -20,9 +20,10 @@ export const sendEmail: SendEmailFunction<User> = async (options) => {
 		From: 'amaro@amarokoberle.com',
 		To: options.emailAddress,
 		Subject: `Here's your login link`,
-		HtmlBody: `<html><body><a href={${options.magicLink}}>Click here to login</a></body></html>`,
+		HtmlBody: `<html><body><p>Hi ${options.user?.name || 'there'},<br />
+		<br /><a href=${options.magicLink}>Click here to login</a></p></body></html>`,
 		TextBody: 'something whatever',
-		MessageStream: 'transactional',
+		MessageStream: 'outbound',
 	};
 	await emailClient.sendEmail(message).then((response) => {
 		console.log(response.To);

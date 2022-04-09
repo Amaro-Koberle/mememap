@@ -12,6 +12,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 	const session = await sessionStorage.getSession(
 		request.headers.get('Cookie')
 	);
+	const error = session.get(auth.sessionErrorKey);
+	if (error) return json({ error });
 	// This session key `auth:magiclink` is the default one used by the EmailLinkStrategy
 	// you can customize it passing a `sessionMagicLinkKey` when creating an
 	// instance.
@@ -33,6 +35,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function LoginIndexRoute() {
 	const { magicLinkSent } = useLoaderData<{ magicLinkSent: boolean }>();
+	const { error } = useLoaderData();
 	return (
 		<div>
 			<header className='flex items-center justify-between text-xl mx-2'>
@@ -55,6 +58,7 @@ export default function LoginIndexRoute() {
 				/>
 			</Form>
 			{magicLinkSent ? <span>Magic link sent</span> : null}
+			{error ? <span>{error.message}</span> : null}
 		</div>
 	);
 }
