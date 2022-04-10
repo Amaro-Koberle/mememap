@@ -38,7 +38,7 @@ model User {
   id        String      @id @default(uuid())
   createdAt DateTime @default(now())
   name     String
-  handle   String @unique
+  username  String @unique
   email   String  @unique
   nodes   Node[]
   links   Link[]

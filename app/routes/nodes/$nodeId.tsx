@@ -6,7 +6,6 @@ import CreateLinkModal from '~/components/modals/CreateLinkModal';
 import DeleteNodeModal from '~/components/modals/DeleteNodeModal';
 import LinkDetailsModal from '~/components/modals/LinkDetailsModal';
 import OutLinkList from '~/components/OutLinkList';
-import { MdArrowBackIos } from 'react-icons/md';
 import { MdOutlineEast } from 'react-icons/md';
 import { MdOutlineEdit } from 'react-icons/md';
 import { MdDeleteOutline } from 'react-icons/md';
@@ -15,6 +14,7 @@ import { db } from '~/utils/db.server';
 import type { Node } from '@prisma/client';
 import type { Link as NodeLink } from '@prisma/client';
 import Button from '~/components/Button';
+import Header from '~/components/Header';
 
 type LoaderData = { node: Node; outLinks: NodeLink[] };
 
@@ -83,13 +83,7 @@ export default function NodeRoute() {
 				setIsOpen={setDeleteNodeModalIsOpen}
 				nodeId={data.node.id}
 			/>
-			<div className='flex items-center justify-between text-xl mx-2'>
-				<Link to='/nodes'>
-					<MdArrowBackIos />
-				</Link>
-				<h2>{data.node.name}</h2>
-				<div className='w-4'></div>
-			</div>
+			<Header title={data.node.name} backButtonLink='/nodes' />
 			<div className='h-full mt-2'>
 				<div className='flex justify-between items-center'>
 					<div className='flex items-center gap-2'>

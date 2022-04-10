@@ -22,7 +22,7 @@ export default function DeleteNodeModal({
 			title='Are you sure?'>
 			<Form method='post'>
 				<Button
-					buttonType='danger'
+					buttonStyle='danger'
 					className='w-full'
 					type='submit'
 					name='nodeId'

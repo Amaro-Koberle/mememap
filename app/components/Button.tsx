@@ -1,7 +1,7 @@
 import ButtonIcon from './ButtonIcon';
 
 interface Props extends React.ComponentPropsWithoutRef<'button'> {
-	buttonType?: 'emphasized' | 'danger';
+	buttonStyle?: 'emphasized' | 'danger';
 	thin?: boolean;
 	buttonName?: string;
 	buttonDescription?: string;
@@ -9,7 +9,7 @@ interface Props extends React.ComponentPropsWithoutRef<'button'> {
 }
 
 export default function Button({
-	buttonType,
+	buttonStyle,
 	thin,
 	buttonName,
 	icon,
@@ -23,9 +23,9 @@ export default function Button({
 			onClick={onClick ? (e) => onClick(e) : undefined}
 			type={type}
 			className={`rounded-xl ${
-				buttonType === 'emphasized'
+				buttonStyle === 'emphasized'
 					? 'bg-stone-800 text-stone-200'
-					: buttonType === 'danger'
+					: buttonStyle === 'danger'
 					? 'text-red-700 bg-red-200'
 					: 'bg-stone-300'
 			}  ${className}`}>
@@ -50,9 +50,9 @@ export default function Button({
 						<p className='text-left'>{buttonName}</p>
 						<p
 							className={`text-sm ${
-								buttonType === 'emphasized'
+								buttonStyle === 'emphasized'
 									? 'text-stone-400'
-									: buttonType == 'danger'
+									: buttonStyle === 'danger'
 									? 'text-red-700 text-opacity-75'
 									: 'text-stone-500'
 							}`}>

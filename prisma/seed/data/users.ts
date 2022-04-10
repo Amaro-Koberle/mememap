@@ -3,7 +3,7 @@ export function getUsers() {
 		{
 			id: 'a',
 			name: 'Amaro',
-			handle: 'amaro',
+			username: 'amaro',
 			email: 'amaro@amarokoberle.com',
 		},
 	];

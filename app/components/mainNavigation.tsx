@@ -1,6 +1,8 @@
-import { NavLink, Link } from 'remix';
+import { NavLink, Link, useLoaderData, json } from 'remix';
+import type { LoaderFunction } from 'remix';
 import Button from './Button';
-
+import type { User } from '@prisma/client';
+import { auth } from '~/utils/services/auth.server';
 import { MdAddCircleOutline } from 'react-icons/md';
 import { MdAddCircle } from 'react-icons/md';
 import { MdOutlineSettings } from 'react-icons/md';
@@ -10,11 +12,17 @@ import { MdExplore } from 'react-icons/md';
 import { MdOutlineAccountCircle } from 'react-icons/md';
 import { MdAccountCircle } from 'react-icons/md';
 
+export const loader: LoaderFunction = async ({ request }) => {
+	const user = await auth.isAuthenticated(request);
+	return json({ user });
+};
+
 export default function MainNavigation() {
-	const isAuthenticated = false;
+	const user = useLoaderData<{ user: User }>();
+	console.log('user:', user);
 	return (
 		<div className='mt-2'>
-			{isAuthenticated ? (
+			{!user ? (
 				//TODO: Add active navlink state
 				<ul className='flex justify-evenly items-center my-1'>
 					<li key='explore'>
@@ -29,10 +37,10 @@ export default function MainNavigation() {
 							{/* <span className='text-sm'>New Node</span> */}
 						</NavLink>
 					</li>
-					<li key='profile'>
-						<NavLink to='/nodes/new' className='flex flex-col items-center'>
+					<li key='me'>
+						<NavLink to='/me' className='flex flex-col items-center'>
 							<MdOutlineAccountCircle className='text-2xl' />
-							{/* <span className='text-sm'>Profile</span> */}
+							{/* <span className='text-sm'>Me</span> */}
 						</NavLink>
 					</li>
 					<li key='settings'>
@@ -43,13 +51,16 @@ export default function MainNavigation() {
 					</li>
 				</ul>
 			) : (
-				<Link to='/login' className='w-full'>
-					<Button
-						className='w-full'
-						buttonType='emphasized'
-						buttonName='Log in or create account'
-					/>
-				</Link>
+				<>
+					<Link to='/login' className='w-full'>
+						<Button
+							className='w-full'
+							buttonStyle='emphasized'
+							buttonName='Log in or create account'
+						/>
+					</Link>
+					<span>{`${user ? user : 'no user'}`}</span>
+				</>
 			)}
 		</div>
 	);

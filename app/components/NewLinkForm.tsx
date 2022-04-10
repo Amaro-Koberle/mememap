@@ -67,7 +67,7 @@ export default function NewLinkForm({
 					) : null}
 					<Button
 						className='w-full mt-2'
-						buttonType='emphasized'
+						buttonStyle='emphasized'
 						icon={<MdOutlineEast />}
 						buttonName='Create link'
 						buttonDescription={

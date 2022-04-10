@@ -24,7 +24,7 @@ export default function DeleteLinkModal({
 			title='Are you sure?'>
 			<Form method='post'>
 				<Button
-					buttonType='danger'
+					buttonStyle='danger'
 					className='w-full'
 					type='submit'
 					name='linkId'

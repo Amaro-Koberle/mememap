@@ -54,7 +54,7 @@ export default function LoginIndexRoute() {
 					buttonDescription="Or to create an account if you don't have one"
 					type='submit'
 					icon={<MdOutlineForwardToInbox />}
-					buttonType='emphasized'
+					buttonStyle='emphasized'
 				/>
 			</Form>
 			{magicLinkSent ? <span>Magic link sent</span> : null}
