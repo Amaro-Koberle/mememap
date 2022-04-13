@@ -19,7 +19,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function MainNavigation() {
 	const user = useLoaderData<{ user: User }>();
-	console.log('user:', user);
 	return (
 		<div className='mt-2'>
 			{!user ? (

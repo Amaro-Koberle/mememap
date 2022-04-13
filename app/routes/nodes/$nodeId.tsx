@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import type { LoaderFunction } from 'remix';
-import { Link, useLoaderData, ActionFunction, json, redirect } from 'remix';
-import dayjs from 'dayjs';
+import { LoaderFunction, ActionFunction, useActionData } from 'remix';
+import { Link, useLoaderData, json, redirect } from 'remix';
 import CreateLinkModal from '~/components/modals/CreateLinkModal';
 import DeleteNodeModal from '~/components/modals/DeleteNodeModal';
 import LinkDetailsModal from '~/components/modals/LinkDetailsModal';
@@ -9,66 +8,105 @@ import OutLinkList from '~/components/OutLinkList';
 import { MdOutlineEast } from 'react-icons/md';
 import { MdOutlineEdit } from 'react-icons/md';
 import { MdDeleteOutline } from 'react-icons/md';
-import { MdOutlineAccountCircle } from 'react-icons/md';
 import { db } from '~/utils/db.server';
-import type { Node } from '@prisma/client';
-import type { Link as NodeLink } from '@prisma/client';
+import type { Node, User, Link as NodeLink } from '@prisma/client';
 import Button from '~/components/Button';
 import Header from '~/components/Header';
+import Author from '~/components/Author';
+import NodeStats from '~/components/NodeStats';
 
-type LoaderData = { node: Node; outLinks: NodeLink[] };
+type LoaderData = {
+	node: Node;
+	inLinks: NodeLink[];
+	outLinks: NodeLink[];
+	nodeAuthor: User;
+};
 
 export const loader: LoaderFunction = async ({ params }) => {
 	const node = await db.node.findUnique({
 		where: { id: params.nodeId },
 	});
-	if (!node) throw new Error('Node not found');
+	if (!node) throw new Error('Node not found.');
 	const outLinks = await db.link.findMany({
 		where: { sourceNodeId: params.nodeId },
 	});
-	const data: LoaderData = { node, outLinks };
+	if (!outLinks) throw new Error('Outgoing links not found.');
+	const inLinks = await db.link.findMany({
+		where: { targetNodeId: params.nodeId },
+	});
+	if (!inLinks) throw new Error('Incoming links not found.');
+	const nodeAuthor = await db.user.findUnique({ where: { id: node.authorId } });
+	if (!nodeAuthor) throw new Error('Node author not found.');
+	const data: LoaderData = { node, inLinks, outLinks, nodeAuthor };
 	return json(data);
 };
 
 type ActionData = {
 	formError?: string;
+	link?: NodeLink;
+	linkAuthor?: User;
 };
 
-const badRequest = (data: ActionData) => json(data, { status: 400 });
+const badRequest = (data: ActionData) => json(data.formError, { status: 400 });
 
 export const action: ActionFunction = async ({ request }) => {
 	const form = await request.formData();
-	const nodeId = form.get('nodeId');
-	if (typeof nodeId !== 'string') {
-		return badRequest({
-			formError: `Node deletion failed.`,
-		});
+	const { _action } = Object.fromEntries(form);
+	if (_action === 'deleteNode') {
+		const nodeId = form.get('nodeId');
+		if (typeof nodeId !== 'string') {
+			return badRequest({
+				formError: 'Invalid node id.',
+			});
+		}
+		await db.node.delete({ where: { id: nodeId } });
+		return redirect(`/nodes/`);
 	}
-
-	await db.node.delete({ where: { id: nodeId } });
-	return redirect(`/nodes/`);
+	if (_action === 'showLinkDetails') {
+		const linkId = form.get('linkId');
+		if (typeof linkId !== 'string') {
+			return badRequest({
+				formError: 'Invalid link id.',
+			});
+		}
+		const link = await db.link.findUnique({ where: { id: linkId } });
+		if (!link) throw new Error('Link not found');
+		const linkAuthor = await db.user.findUnique({
+			where: { id: link.authorId },
+		});
+		if (!linkAuthor) throw new Error('Link author not found');
+		const actionData: ActionData = { link, linkAuthor };
+		return json(actionData);
+	}
+	return null;
 };
 
 export default function NodeRoute() {
 	const data = useLoaderData<LoaderData>();
+	const actionData = useActionData<ActionData>();
 
 	const [displayedLink, setLDisplayedLink] = useState<NodeLink | null>(null);
+	const [displayedLinkAuthor, setLDisplayedLinkAuthor] = useState<User | null>(
+		null
+	);
 	const [linkDetailsModalIsOpen, setLinkDetailsModalIsOpen] = useState(false);
 	const [createLinkModalIsOpen, setCreateLinkModalIsOpen] = useState(false);
 	const [deleteNodeModalIsOpen, setDeleteNodeModalIsOpen] = useState(false);
 
-	const postDate = dayjs(data.node.createdAt).format('h:m A • MMM D, YYYY');
-
-	const summonLinkDetailsModal = (link: NodeLink): void => {
-		setLDisplayedLink(link);
-		setLinkDetailsModalIsOpen(true);
+	const summonLinkDetailsModal = () => {
+		if (actionData?.link && actionData?.linkAuthor) {
+			setLDisplayedLink(actionData.link);
+			setLDisplayedLinkAuthor(actionData.linkAuthor);
+			setLinkDetailsModalIsOpen(true);
+		}
 	};
 
 	return (
 		<div className='h-full relative'>
-			{displayedLink ? (
+			{displayedLink && displayedLinkAuthor ? (
 				<LinkDetailsModal
 					link={displayedLink}
+					linkAuthor={displayedLinkAuthor}
 					isOpen={linkDetailsModalIsOpen}
 					setIsOpen={setLinkDetailsModalIsOpen}
 				/>
@@ -86,15 +124,7 @@ export default function NodeRoute() {
 			<Header title={data.node.name} backButtonLink='/nodes' />
 			<div className='h-full mt-2'>
 				<div className='flex justify-between items-center'>
-					<div className='flex items-center gap-2'>
-						<div className='w-10 h-10 rounded-full border border-stone-900 bg-stone-300 flex justify-center items-center text-5xl'>
-							<MdOutlineAccountCircle className='text-stone-400' />
-						</div>
-						<div className='flex flex-col'>
-							<span>User Name</span>
-							<span className='text-sm text-stone-500'>@username</span>
-						</div>
-					</div>
+					<Author author={data.nodeAuthor} />
 					<div className='flex flex-nowrap gap-1 h-10 items-center'>
 						<Button
 							icon={<MdOutlineEast />}
@@ -121,10 +151,11 @@ export default function NodeRoute() {
 						summonLinkDetailsModal={summonLinkDetailsModal}
 						outLinks={data.outLinks}
 					/>
-					<div className='text-stone-500 text-sm flex justify-between mt-2'>
-						<span>{postDate}</span>
-						<span>{`In 12 • Out ${data.outLinks.length}`}</span>
-					</div>
+					<NodeStats
+						node={data.node}
+						inLinks={data.inLinks}
+						outLinks={data.outLinks}
+					/>
 				</div>
 			</div>
 		</div>

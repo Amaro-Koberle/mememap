@@ -1,6 +1,6 @@
 import type { LoaderFunction } from 'remix';
-import { json, Link, useLoaderData } from 'remix';
-
+import { json, useLoaderData } from 'remix';
+import NodeList from '~/components/NodeList';
 import { db } from '~/utils/db.server';
 
 type LoaderData = {
@@ -23,16 +23,7 @@ export default function NodesIndexRoute() {
 
 	return (
 		<div>
-			<ul>
-				{data.nodeListItems.map((node) => (
-					<li key={node.id}>
-						<Link to={node.id}>
-							<p className='my-3'>{node.name}</p>
-							<hr className='border-b border-stone-300' />
-						</Link>
-					</li>
-				))}
-			</ul>
+			<NodeList nodeListItems={data.nodeListItems} />
 		</div>
 	);
 }

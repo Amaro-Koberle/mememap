@@ -1,7 +1,7 @@
 export default function LinksIndexRoute() {
 	return (
 		<div>
-			<span>Link Index Route</span>
+			<span>Links Index Route</span>
 		</div>
 	);
 }

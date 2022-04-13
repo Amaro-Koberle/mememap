@@ -12,9 +12,9 @@ import Input from '~/components/Input';
 import { MdArrowBackIos } from 'react-icons/md';
 
 import { db } from '~/utils/db.server';
-import type { Link as LinkPost } from '@prisma/client';
+import type { Link as NodeLink } from '@prisma/client';
 
-type LoaderData = { link: LinkPost };
+type LoaderData = { link: NodeLink };
 
 export const loader: LoaderFunction = async ({ params }) => {
 	const link = await db.link.findUnique({
