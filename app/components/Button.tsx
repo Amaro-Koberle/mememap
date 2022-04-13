@@ -16,12 +16,16 @@ export default function Button({
 	buttonDescription,
 	className,
 	type,
+	value,
+	name,
 	onClick,
 }: Props) {
 	return (
 		<button
 			onClick={onClick ? (e) => onClick(e) : undefined}
+			name={name}
 			type={type}
+			value={value}
 			className={`rounded-xl ${
 				buttonStyle === 'emphasized'
 					? 'bg-stone-800 text-stone-200'

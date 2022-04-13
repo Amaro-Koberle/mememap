@@ -1,15 +1,12 @@
 import { useState } from 'react';
-import { Link } from 'remix';
-
-import { MdOutlineMoreVert } from 'react-icons/md';
 import { MdNavigateNext } from 'react-icons/md';
 import { MdNavigateBefore } from 'react-icons/md';
 
-import type { Link as LinkPost } from '@prisma/client';
-
+import type { Link as NodeLink } from '@prisma/client';
+import OutLinkButton from './OutLinkButton';
 interface Props {
-	outLinks: LinkPost[];
-	summonLinkDetailsModal: (link: LinkPost) => void;
+	outLinks: NodeLink[];
+	summonLinkDetailsModal: () => void;
 }
 
 export default function OutLinkList({
@@ -28,13 +25,15 @@ export default function OutLinkList({
 		indexOfLastLinkOnSlide
 	);
 
-	if (currentSlide > numberOfSlides || currentSlide < 1) {
-		setCurrentSlide(1);
+	if (numberOfSlides !== 1 && numberOfSlides !== 0) {
+		if (currentSlide > numberOfSlides || currentSlide < 1) {
+			setCurrentSlide(1);
+		}
 	}
 
 	return (
 		<div>
-			{numberOfSlides != 1 ? (
+			{numberOfSlides !== 1 && numberOfSlides !== 0 ? (
 				<div className='flex justify-between text-xl'>
 					<button
 						onClick={() => {
@@ -55,21 +54,11 @@ export default function OutLinkList({
 			) : null}
 			<ul>
 				{linksOnCurrentSlide.map((link) => (
-					<li key={link.id}>
-						<div className='rounded-xl bg-stone-300 mt-2 w-full flex items-center'>
-							<Link to={`/nodes/${link.targetNodeId}`} className='p-3 w-full'>
-								<span>{link.name}</span>
-							</Link>
-							<button
-								className='flex items-center space-x-3 pr-3'
-								onClick={() => {
-									summonLinkDetailsModal(link);
-								}}>
-								<hr className='border-l h-8 border-stone-400' />
-								<MdOutlineMoreVert className='text-xl' />
-							</button>
-						</div>
-					</li>
+					<OutLinkButton
+						key={link.id}
+						link={link}
+						summonLinkDetailsModal={summonLinkDetailsModal}
+					/>
 				))}
 			</ul>
 		</div>
