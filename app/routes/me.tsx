@@ -9,11 +9,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 	const user = await auth.isAuthenticated(request, {
 		failureRedirect: '/login',
 	});
-	return json({ user });
+	return json(user);
 };
 
 export default function Me() {
-	const { user } = useLoaderData<{ user: User }>();
+	const user = useLoaderData<User>();
 	return (
 		<div>
 			<h1>Welcome {user.name}</h1>

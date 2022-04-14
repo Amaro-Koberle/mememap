@@ -4,14 +4,26 @@ import NodeList from '~/components/NodeList';
 import { db } from '~/utils/db.server';
 
 type LoaderData = {
-	nodeListItems: Array<{ id: string; name: string }>;
+	nodeListItems: Array<{
+		id: string;
+		name: string;
+		createdAt: Date;
+		author: { username: string };
+		_count: { inLinks: number; outLinks: number };
+	}>;
 };
 
 export const loader: LoaderFunction = async () => {
 	const data: LoaderData = {
 		nodeListItems: await db.node.findMany({
-			take: 5,
-			select: { id: true, name: true },
+			take: 50,
+			select: {
+				id: true,
+				name: true,
+				createdAt: true,
+				author: { select: { username: true } },
+				_count: { select: { inLinks: true, outLinks: true } },
+			},
 			orderBy: { createdAt: 'desc' },
 		}),
 	};

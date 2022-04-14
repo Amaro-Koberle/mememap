@@ -13,15 +13,17 @@ import { MdOutlineAccountCircle } from 'react-icons/md';
 import { MdAccountCircle } from 'react-icons/md';
 
 export const loader: LoaderFunction = async ({ request }) => {
-	const user = await auth.isAuthenticated(request);
-	return json({ user });
+	const user = await auth.isAuthenticated(request, {
+		failureRedirect: '/login',
+	});
+	return json(user);
 };
 
 export default function MainNavigation() {
-	const user = useLoaderData<{ user: User }>();
+	const user = useLoaderData<User>();
 	return (
 		<div className='mt-2'>
-			{!user ? (
+			{user ? (
 				//TODO: Add active navlink state
 				<ul className='flex justify-evenly items-center my-1'>
 					<li key='explore'>
@@ -37,7 +39,9 @@ export default function MainNavigation() {
 						</NavLink>
 					</li>
 					<li key='me'>
-						<NavLink to='/me' className='flex flex-col items-center'>
+						<NavLink
+							to={`/users/${user.id}`}
+							className='flex flex-col items-center'>
 							<MdOutlineAccountCircle className='text-2xl' />
 							{/* <span className='text-sm'>Me</span> */}
 						</NavLink>

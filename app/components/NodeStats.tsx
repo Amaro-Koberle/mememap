@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
 import type { Node, Link as NodeLink } from '@prisma/client';
+import PostDate from './PostDate';
 
 interface Props {
 	node: Node;
@@ -8,10 +8,9 @@ interface Props {
 }
 
 export default function NodeStats({ node, inLinks, outLinks }: Props) {
-	const postDate = dayjs(node.createdAt).format('h:m A • MMM D, YYYY');
 	return (
 		<div className='text-stone-500 text-sm flex justify-between mt-2'>
-			<span>{postDate}</span>
+			<PostDate createdAt={node.createdAt} />
 			<span>{`In ${inLinks.length} • Out ${outLinks.length}`}</span>
 		</div>
 	);
