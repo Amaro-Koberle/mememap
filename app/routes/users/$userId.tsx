@@ -51,13 +51,13 @@ export default function UserRoute() {
 			<Header title={data.user.name} backButtonLink='/nodes' />
 			<div className='h-full mt-2'>
 				<div className='flex gap-4 items-center m-4'>
-					<div className='flex flex-col justify-center'>
+					<div className='flex flex-col items-center'>
 						<ProfilePicture size='lg' />
 						<span>{`@${data.user.username}`}</span>
 					</div>
 					<div className='flex flex-nowrap gap-1 h-10 items-center'>
 						<Button icon={<MdOutlineEast />} thin={true} buttonName='Link' />
-						<Link to={`/nodes/${data.user.id}/edit`}>
+						<Link to='edit'>
 							<Button icon={<MdOutlineEdit />} />
 						</Link>
 					</div>

@@ -8,7 +8,7 @@ import { auth } from '~/utils/services/auth.server';
 import { sessionStorage } from '~/utils/services/session.server';
 
 export const loader: LoaderFunction = async ({ request }) => {
-	await auth.isAuthenticated(request, { successRedirect: '/me' });
+	await auth.isAuthenticated(request, { successRedirect: '/welcome' });
 	const session = await sessionStorage.getSession(
 		request.headers.get('Cookie')
 	);

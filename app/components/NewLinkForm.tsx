@@ -8,14 +8,16 @@ import type { Node } from '@prisma/client';
 import Button from './Button';
 
 interface Props {
+	authorId: string;
 	sourceNode: Node | null;
 	targetNode: Node | null;
-	actionData: {
+	actionData?: {
 		formError?: string;
 		fieldErrors?: {
 			name: string | undefined;
 		};
 		fields?: {
+			authorId: string;
 			name: string;
 			sourceNodeId: string;
 			targetNodeId: string;
@@ -24,6 +26,7 @@ interface Props {
 }
 
 export default function NewLinkForm({
+	authorId,
 	sourceNode,
 	targetNode,
 	actionData,
@@ -60,6 +63,7 @@ export default function NewLinkForm({
 				<div>
 					<input name='sourceNodeId' value={sourceNode?.id} type='hidden' />
 					<input name='targetNodeId' value={targetNode?.id} type='hidden' />
+					<input name='authorId' value={authorId} type='hidden' />
 				</div>
 				<div>
 					{actionData?.formError ? (

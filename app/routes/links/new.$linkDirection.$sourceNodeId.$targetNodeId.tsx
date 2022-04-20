@@ -4,8 +4,9 @@ import NewLinkForm from '~/components/NewLinkForm';
 
 import { MdArrowBackIos } from 'react-icons/md';
 
-import type { Node } from '@prisma/client';
+import type { Node, User } from '@prisma/client';
 import { db } from '~/utils/db.server';
+import { auth } from '~/utils/services/auth.server';
 
 function validateNodeName(name: string) {
 	if (name.length < 3) {
@@ -19,6 +20,7 @@ type ActionData = {
 		name: string | undefined;
 	};
 	fields?: {
+		authorId: string;
 		name: string;
 		sourceNodeId: string;
 		targetNodeId: string;
@@ -29,10 +31,12 @@ const badRequest = (data: ActionData) => json(data, { status: 400 });
 
 export const action: ActionFunction = async ({ request }) => {
 	const form = await request.formData();
+	const authorId = form.get('authorId');
 	const name = form.get('name');
 	const sourceNodeId = form.get('sourceNodeId');
 	const targetNodeId = form.get('targetNodeId');
 	if (
+		typeof authorId !== 'string' ||
 		typeof name !== 'string' ||
 		typeof sourceNodeId !== 'string' ||
 		typeof targetNodeId !== 'string'
@@ -45,7 +49,7 @@ export const action: ActionFunction = async ({ request }) => {
 		name: validateNodeName(name),
 	};
 
-	const fields = { sourceNodeId, targetNodeId, name };
+	const fields = { sourceNodeId, targetNodeId, name, authorId };
 	if (Object.values(fieldErrors).some(Boolean)) {
 		return badRequest({ fieldErrors, fields });
 	}
@@ -55,12 +59,16 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 type LoaderData = {
+	user: User;
 	sourceNode: Node | null;
 	targetNode: Node | null;
 	nodeListItems: Array<{ id: string; name: string }>;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
+	const user = await auth.isAuthenticated(request, {
+		failureRedirect: '/login',
+	});
 	const sourceNode = await db.node.findUnique({
 		where: { id: params.sourceNodeId },
 	});
@@ -72,7 +80,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 		select: { id: true, name: true },
 		orderBy: { createdAt: 'desc' },
 	});
-	const data: LoaderData = { sourceNode, targetNode, nodeListItems };
+	const data: LoaderData = { sourceNode, targetNode, nodeListItems, user };
 	return json(data);
 };
 
@@ -127,6 +135,7 @@ export default function NewLinkRoute() {
 					sourceNode={data.sourceNode}
 					targetNode={data.targetNode}
 					actionData={actionData}
+					authorId={data.user.id}
 				/>
 			)}
 		</div>

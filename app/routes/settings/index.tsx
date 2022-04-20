@@ -21,7 +21,7 @@ export let action: ActionFunction = async ({ request }) => {
 export default function SettingsIndexRoute() {
 	const data = useLoaderData<{ user: User }>();
 	return (
-		<>
+		<div className='h-full relative'>
 			<Header title='Settings' />
 			<ul className='mt-4'>
 				<MenuItem
@@ -42,7 +42,7 @@ export default function SettingsIndexRoute() {
 					to='delete-account'
 				/>
 			</ul>
-			<Form method='post'>
+			<Form method='post' className='absolute bottom-0 inset-x-0'>
 				<Button
 					buttonName='Log out'
 					className='mt-4 w-full'
@@ -51,6 +51,6 @@ export default function SettingsIndexRoute() {
 					name='logout'
 				/>
 			</Form>
-		</>
+		</div>
 	);
 }

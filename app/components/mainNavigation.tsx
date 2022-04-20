@@ -12,18 +12,14 @@ import { MdExplore } from 'react-icons/md';
 import { MdOutlineAccountCircle } from 'react-icons/md';
 import { MdAccountCircle } from 'react-icons/md';
 
-export const loader: LoaderFunction = async ({ request }) => {
-	const user = await auth.isAuthenticated(request, {
-		failureRedirect: '/login',
-	});
-	return json(user);
-};
+interface Props {
+	userId: string;
+}
 
-export default function MainNavigation() {
-	const user = useLoaderData<User>();
+export default function MainNavigation({ userId }: Props) {
 	return (
 		<div className='mt-2'>
-			{user ? (
+			{userId ? (
 				//TODO: Add active navlink state
 				<ul className='flex justify-evenly items-center my-1'>
 					<li key='explore'>
@@ -40,7 +36,7 @@ export default function MainNavigation() {
 					</li>
 					<li key='me'>
 						<NavLink
-							to={`/users/${user.id}`}
+							to={`/users/${userId}`}
 							className='flex flex-col items-center'>
 							<MdOutlineAccountCircle className='text-2xl' />
 							{/* <span className='text-sm'>Me</span> */}
@@ -54,16 +50,13 @@ export default function MainNavigation() {
 					</li>
 				</ul>
 			) : (
-				<>
-					<Link to='/login' className='w-full'>
-						<Button
-							className='w-full'
-							buttonStyle='emphasized'
-							buttonName='Log in or create account'
-						/>
-					</Link>
-					<span>{`${user ? user : 'no user'}`}</span>
-				</>
+				<Link to='/login' className='w-full'>
+					<Button
+						className='w-full'
+						buttonStyle='emphasized'
+						buttonName='Log in or create account'
+					/>
+				</Link>
 			)}
 		</div>
 	);

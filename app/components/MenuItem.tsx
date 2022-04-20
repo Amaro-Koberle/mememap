@@ -3,7 +3,7 @@ import { MdChevronRight } from 'react-icons/md';
 
 interface Props {
 	name: string;
-	description?: string;
+	description?: string | null;
 	to: string;
 }
 

@@ -34,7 +34,7 @@ export default function NodesIndexRoute() {
 	const data = useLoaderData<LoaderData>();
 
 	return (
-		<div>
+		<div className='h-full relative'>
 			<NodeList nodeListItems={data.nodeListItems} />
 		</div>
 	);

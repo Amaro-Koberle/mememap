@@ -8,21 +8,29 @@ import {
 	json,
 } from 'remix';
 import Input from '~/components/Input';
+import type { User } from '@prisma/client';
+import { auth } from '~/utils/services/auth.server';
 
 import { MdArrowBackIos } from 'react-icons/md';
 
 import { db } from '~/utils/db.server';
 import type { Link as NodeLink } from '@prisma/client';
 
-type LoaderData = { link: NodeLink };
+type LoaderData = { link: NodeLink; user: User };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
+	const user = await auth.isAuthenticated(request, {
+		failureRedirect: '/',
+	});
 	const link = await db.link.findUnique({
 		where: { id: params.linkId },
 	});
 	if (!link) throw new Error('Link not found');
+	if (!user) throw new Error('User not found');
+	if (link.authorId !== user.id)
+		throw new Error('It looks like you are not allowed to edit this link');
 
-	const data: LoaderData = { link };
+	const data: LoaderData = { link, user };
 	return json(data);
 };
 
